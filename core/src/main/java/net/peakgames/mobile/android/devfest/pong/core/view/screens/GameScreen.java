@@ -13,9 +13,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class GameScreen extends AbstractScreen{
@@ -32,6 +36,8 @@ public class GameScreen extends AbstractScreen{
 	private Image scoreBar;
 	private Label myScoreLabel;
 	private Label aIScoreLabel;
+	private Label goalLabel;
+	private Label failLabel;
 	private ParticleActor particle;
 	private Map<Integer, Float> barVelocityMap = new TreeMap<Integer, Float>();
 	
@@ -73,12 +79,24 @@ public class GameScreen extends AbstractScreen{
         Label aiText = new Label("AI   :", textLabelStyle);
         meText.setPosition(390, 747);
         aiText.setPosition(390, 707);
+        
+        Label.LabelStyle goalLabelStyle = new Label.LabelStyle(new BitmapFont(Gdx.files.internal("steelfish.fnt")), Color.BLACK);
+		goalLabel = new Label("GOAL!!!", goalLabelStyle);
+		goalLabel.setWidth(300);
+		goalLabel.setAlignment(Align.center);
+		goalLabel.setPosition(30, 735);
+		goalLabel.addAction(Actions.alpha(0));
+		goalLabel.getStyle().font.setScale(2.5f);
+		goalLabel.setOriginX(goalLabel.getWidth()/2);
+        
 		resetGame();
 		loadParticleEffect();
 		addActorsToStage();
 		this.stage.addActor(meText);
         this.stage.addActor(aiText);
 		setListeners();
+
+		
 		
 	}
 
@@ -124,6 +142,8 @@ public class GameScreen extends AbstractScreen{
 		this.stage.addActor(scoreBar);
 		this.stage.addActor(myScoreLabel);
 		this.stage.addActor(aIScoreLabel);
+		this.stage.addActor(goalLabel);
+
 	}
 
 	private void loadParticleEffect() {
@@ -161,6 +181,7 @@ public class GameScreen extends AbstractScreen{
 		Score scoreResult = processBallMovement();
 		
         if (scoreResult == Score.MY) {
+        	goalAction();
         	resetGame();
         	myScore++;
         	myScoreLabel.setText(myScore + "");
@@ -172,6 +193,24 @@ public class GameScreen extends AbstractScreen{
         
     }
 	
+	private void goalAction() {
+    	goalLabel.setText("GOAL!!!");
+    	goalLabel.getStyle().fontColor = Color.GREEN;
+		
+		SequenceAction goalAction = new SequenceAction();
+		goalAction.addAction(Actions.alpha(1));
+		goalAction.addAction(Actions.delay(0.15f));
+		goalAction.addAction(Actions.alpha(0,0.15f));		
+		goalAction.addAction(Actions.delay(0.15f));
+		goalAction.addAction(Actions.alpha(1,0.15f));		
+		goalAction.addAction(Actions.delay(0.15f));
+		goalAction.addAction(Actions.alpha(0,0.15f));
+		goalAction.addAction(Actions.delay(0.15f));
+		goalAction.addAction(Actions.alpha(1,0.15f));
+		goalAction.addAction(Actions.alpha(0,1));
+		goalLabel.addAction(goalAction);
+	}
+
 	private void resetGame() {
 		topBar.setPosition(177, 660);
 		bottomBar.setPosition(177, 30);
