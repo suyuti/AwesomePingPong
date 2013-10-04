@@ -25,15 +25,15 @@ public class AwesomePingPong extends Game {
         setScreen(getSplashScreen());
     }
 
-    public Screen getSplashScreen() {
+    public SplashScreen getSplashScreen() {
         return new SplashScreen(this);
     }
 
-    public Screen getMenuScreen() {
+    public MenuScreen getMenuScreen() {
         return new MenuScreen(this);
     }
     
-    public Screen getGameScreen() {
+    public GameScreen getGameScreen() {
         return new GameScreen(this);
     }
 
