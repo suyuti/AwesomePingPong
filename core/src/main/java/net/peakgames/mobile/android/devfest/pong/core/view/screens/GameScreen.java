@@ -8,11 +8,14 @@ import net.peakgames.mobile.android.devfest.pong.core.AwesomePingPong;
 import net.peakgames.mobile.android.devfest.pong.core.view.effects.ParticleActor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class GameScreen extends AbstractScreen{
@@ -21,15 +24,21 @@ public class GameScreen extends AbstractScreen{
 		NONE, MY, OPPONENT
 	}
 	
+	private int myScore = 0;
+	private int aIScore = 0;
 	private Image ball;
 	private Image topBar;
 	private Image bottomBar;
+	private Image scoreBar;
+	private Label myScoreLabel;
+	private Label aIScoreLabel;
 	private ParticleActor particle;
 	private Map<Integer, Float> barVelocityMap = new TreeMap<Integer, Float>();
 	
 	private static final float MIN_VELOCITY_X_PER_SECOND = 50;
 	private float ballVelocityXPerSecond = 120;
 	private float ballVelocityYPerSecond = 200;
+	private static final int GAME_AREA_TOP = 700;
 	
 	public GameScreen(AwesomePingPong game) {
 		super(game);
@@ -41,16 +50,34 @@ public class GameScreen extends AbstractScreen{
 		initializeBarVelocityMap();
 		
 		Image bgImage = new Image(new Texture(Gdx.files.internal("gameBg.png")));
+		bgImage.setY(-110);
 		this.stage.addActor(bgImage);
 		
 		ball = new Image(new Texture(Gdx.files.internal("pongball.png")));
 		ball.setOrigin(ball.getX() + ball.getWidth() / 2, ball.getY() + ball.getHeight() / 2);
 		topBar = new Image(new Texture(Gdx.files.internal("bar.png")));
 		bottomBar = new Image(new Texture(Gdx.files.internal("bar.png")));
+		scoreBar = new Image(new Texture(Gdx.files.internal("scoreBar2.png")));
+		scoreBar.setWidth(480);
+		scoreBar.setHeight(110);
+		scoreBar.setPosition(0, 690);
 		
+		Label.LabelStyle scoreLabelStyle = new Label.LabelStyle(new BitmapFont(Gdx.files.internal("steelfish.fnt")), Color.BLUE);
+		myScoreLabel = new Label("0", scoreLabelStyle);
+		myScoreLabel.setPosition(440, 747);
+        aIScoreLabel = new Label("0", scoreLabelStyle);
+        aIScoreLabel.setPosition(440, 707);
+        
+        Label.LabelStyle textLabelStyle = new Label.LabelStyle(new BitmapFont(Gdx.files.internal("steelfish.fnt")), Color.BLACK);
+        Label meText = new Label("ME :", textLabelStyle);
+        Label aiText = new Label("AI   :", textLabelStyle);
+        meText.setPosition(390, 747);
+        aiText.setPosition(390, 707);
 		resetGame();
 		loadParticleEffect();
 		addActorsToStage();
+		this.stage.addActor(meText);
+        this.stage.addActor(aiText);
 		setListeners();
 		
 	}
@@ -94,6 +121,9 @@ public class GameScreen extends AbstractScreen{
 		this.stage.addActor(bottomBar);
 		this.stage.addActor(ball);
 		this.stage.addActor(particle);
+		this.stage.addActor(scoreBar);
+		this.stage.addActor(myScoreLabel);
+		this.stage.addActor(aIScoreLabel);
 	}
 
 	private void loadParticleEffect() {
@@ -124,7 +154,7 @@ public class GameScreen extends AbstractScreen{
         ball.rotate(-ballXPixel);
         
         float ballTopPanelDiffX = (ball.getX() + ball.getWidth() / 2) - (topBar.getX() + topBar.getWidth() / 2);
-        float thresholdedDiff = ballTopPanelDiffX * 3f;
+        float thresholdedDiff = ballTopPanelDiffX * 5f;
         
 		topBar.setX(topBar.getX() + thresholdedDiff * delta);
         
@@ -132,14 +162,18 @@ public class GameScreen extends AbstractScreen{
 		
         if (scoreResult == Score.MY) {
         	resetGame();
+        	myScore++;
+        	myScoreLabel.setText(myScore + "");
         } else if (scoreResult == Score.OPPONENT) {
+        	aIScore++;
+        	aIScoreLabel.setText(aIScore + "");
         	resetGame();
         }
         
     }
 	
 	private void resetGame() {
-		topBar.setPosition(177, 740);
+		topBar.setPosition(177, 660);
 		bottomBar.setPosition(177, 30);
 		ball.setPosition(220, 380);
 		ballVelocityXPerSecond = 120;
@@ -165,7 +199,7 @@ public class GameScreen extends AbstractScreen{
 			if(ballCenterX >= bottomBarLeft && ballCenterX <= bottomBarRight) {
 				System.out.println("HIT THE BOTTOM BAR");
 				updateBallVelocity(ballCenterX, bottomBarLeft);
-				particle.show(new Vector2(ballCenterX, ballBottom));
+				particle.show(new Vector2(ballCenterX, ballBottom), new Vector2(30,150));
 				ball.setY(bottomBarTop);
 			}
 		}
@@ -174,7 +208,7 @@ public class GameScreen extends AbstractScreen{
 			if(ballCenterX >= topBarLeft && ballCenterX <= topBarRight) {
 				System.out.println("HIT THE TOP BAR");
 				updateBallVelocity(ballCenterX, topBarLeft);
-				particle.show(new Vector2(ballCenterX, ballTop));
+				particle.show(new Vector2(ballCenterX, ballTop), new Vector2(210,330));
 				ball.setY(topBarBottom - ball.getHeight());
 			}
 		}
@@ -185,7 +219,7 @@ public class GameScreen extends AbstractScreen{
 			ballVelocityXPerSecond = flipDirection(ballVelocityXPerSecond);
 		}
 		
-		if(ballTop >= game.getScreenHeight()) {
+		if(ballTop >= GAME_AREA_TOP) {
 			return Score.MY;
 		} else if (ballBottom <= 0) {
 			return Score.OPPONENT;

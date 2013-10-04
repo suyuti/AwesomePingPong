@@ -1,6 +1,7 @@
 package net.peakgames.mobile.android.devfest.pong.core.view.effects;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -22,7 +23,10 @@ public class ParticleActor extends Actor {
 		}
 	}
 
-	public void show(Vector2 position) {
+	public void show(Vector2 position, Vector2 angle) {
+		ParticleEmitter emitter = effect.getEmitters().get(0);
+		emitter.getAngle().setHighMin(angle.x);
+		emitter.getAngle().setHighMax(angle.y);
 		setPosition(position.x, position.y);
 		effect.start(); // need to start the particle spawning
 		draw = true;
