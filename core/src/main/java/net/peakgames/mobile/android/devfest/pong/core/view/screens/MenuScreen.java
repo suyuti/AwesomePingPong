@@ -3,7 +3,9 @@ package net.peakgames.mobile.android.devfest.pong.core.view.screens;
 import net.peakgames.mobile.android.devfest.pong.core.AwesomePingPong;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
@@ -29,6 +31,9 @@ public class MenuScreen extends AbstractScreen {
 
     @Override
     public void show() {
+    }
+    
+    public void initialize(){
 
     	Image backGround = new Image(new TextureRegion(new Texture(Gdx.files.internal("BG.png"))));
     	this.stage.addActor(backGround);
@@ -53,13 +58,13 @@ public class MenuScreen extends AbstractScreen {
         this.stage.addActor(menuTable);
 
         addGameTitle();
-
-
     }
 
 	private void addGameTitle() {
 		Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = new BitmapFont(Gdx.files.internal("steelfish.fnt"), Gdx.files.internal("steelfish.png"),false);
+        labelStyle.font = new BitmapFont(Gdx.files.internal("steelfish.fnt"),false);
+//        labelStyle.font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        labelStyle.font.scale(1.5f);
         Label title = new Label("Awesome Ping Pong!", labelStyle);
         title.setWidth(game.getScreenWidth());
         title.setAlignment(Align.center);
@@ -94,9 +99,9 @@ public class MenuScreen extends AbstractScreen {
 
     private Button getButton(String text, String upName, String downName) {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        buttonStyle.font = new BitmapFont(Gdx.files.internal("steelfish.fnt"),false);
         buttonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(upName)));
         buttonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(downName)));
-        buttonStyle.font = new BitmapFont();
         TextButton button = new TextButton(text,buttonStyle);
         return button;
     }
@@ -105,7 +110,7 @@ public class MenuScreen extends AbstractScreen {
         MoveToAction moveToAction = new MoveToAction();
         moveToAction.setX(game.getScreenWidth() / 2);
         moveToAction.setY(table.getY());
-        moveToAction.setDuration(0.5f);
+        moveToAction.setDuration(0.75f);
         moveToAction.setInterpolation(Interpolation.elastic);
         table.addAction(moveToAction);
     }

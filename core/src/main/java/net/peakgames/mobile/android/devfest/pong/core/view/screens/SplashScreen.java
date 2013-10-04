@@ -29,6 +29,8 @@ public class SplashScreen extends AbstractScreen {
     }
 
 	private void addSplashAnimation() {
+		final MenuScreen menuScreen = game.getMenuScreen();
+		menuScreen.initialize();
 			
         SequenceAction splashAction = new SequenceAction();
         splashAction.addAction(Actions.fadeOut(0f));
@@ -38,7 +40,7 @@ public class SplashScreen extends AbstractScreen {
         splashAction.addAction(new Action() {
             @Override
             public boolean act(float delta) {
-                game.setScreen(game.getMenuScreen());
+                game.setScreen(menuScreen);
                 return false;
             }
         });
