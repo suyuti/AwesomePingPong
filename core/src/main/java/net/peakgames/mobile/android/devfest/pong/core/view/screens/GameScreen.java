@@ -8,6 +8,7 @@ import net.peakgames.mobile.android.devfest.pong.core.AwesomePingPong;
 import net.peakgames.mobile.android.devfest.pong.core.view.effects.ParticleActor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -32,6 +33,8 @@ public class GameScreen extends AbstractScreen{
 	private Image scoreBar;
 	private Label myScoreLabel;
 	private Label aIScoreLabel;
+	private Sound pingBoard;
+	private Sound pingWall;
 	private ParticleActor particle;
 	private Map<Integer, Float> barVelocityMap = new TreeMap<Integer, Float>();
 	
@@ -53,6 +56,8 @@ public class GameScreen extends AbstractScreen{
 		bgImage.setY(-110);
 		this.stage.addActor(bgImage);
 		
+		pingBoard = Gdx.audio.newSound(Gdx.files.internal("ping_wood.wav"));
+		pingWall = Gdx.audio.newSound(Gdx.files.internal("ping_wall.wav"));
 		ball = new Image(new Texture(Gdx.files.internal("pongball.png")));
 		ball.setOrigin(ball.getX() + ball.getWidth() / 2, ball.getY() + ball.getHeight() / 2);
 		topBar = new Image(new Texture(Gdx.files.internal("bar.png")));
@@ -201,6 +206,7 @@ public class GameScreen extends AbstractScreen{
 				updateBallVelocity(ballCenterX, bottomBarLeft);
 				particle.show(new Vector2(ballCenterX, ballBottom), new Vector2(30,150));
 				ball.setY(bottomBarTop);
+				pingBoard.play();
 			}
 		}
 		
@@ -210,6 +216,7 @@ public class GameScreen extends AbstractScreen{
 				updateBallVelocity(ballCenterX, topBarLeft);
 				particle.show(new Vector2(ballCenterX, ballTop), new Vector2(210,330));
 				ball.setY(topBarBottom - ball.getHeight());
+				pingBoard.play();
 			}
 		}
 		
@@ -217,6 +224,7 @@ public class GameScreen extends AbstractScreen{
 			correctBallXCoordinateIfRequired(ballRight);
 			System.out.println("HIT THE SCREEN WIDTH");
 			ballVelocityXPerSecond = flipDirection(ballVelocityXPerSecond);
+			pingWall.play();
 		}
 		
 		if(ballTop >= GAME_AREA_TOP) {
