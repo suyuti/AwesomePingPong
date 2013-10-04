@@ -33,6 +33,7 @@ public class GameScreen extends AbstractScreen{
 	private Image scoreBar;
 	private Label myScoreLabel;
 	private Label aIScoreLabel;
+	private Sound whistleSound;
 	private Sound pingBoard;
 	private Sound pingWall;
 	private ParticleActor particle;
@@ -58,6 +59,7 @@ public class GameScreen extends AbstractScreen{
 		
 		pingBoard = Gdx.audio.newSound(Gdx.files.internal("ping_wood.wav"));
 		pingWall = Gdx.audio.newSound(Gdx.files.internal("ping_wall.wav"));
+		whistleSound = Gdx.audio.newSound(Gdx.files.internal("whistle.wav"));
 		ball = new Image(new Texture(Gdx.files.internal("pongball.png")));
 		ball.setOrigin(ball.getX() + ball.getWidth() / 2, ball.getY() + ball.getHeight() / 2);
 		topBar = new Image(new Texture(Gdx.files.internal("bar.png")));
@@ -168,9 +170,11 @@ public class GameScreen extends AbstractScreen{
         if (scoreResult == Score.MY) {
         	resetGame();
         	myScore++;
+        	whistleSound.play();
         	myScoreLabel.setText(myScore + "");
         } else if (scoreResult == Score.OPPONENT) {
         	aIScore++;
+        	whistleSound.play();
         	aIScoreLabel.setText(aIScore + "");
         	resetGame();
         }
