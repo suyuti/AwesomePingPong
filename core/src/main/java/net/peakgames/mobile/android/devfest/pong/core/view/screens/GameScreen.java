@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -65,7 +66,7 @@ public class GameScreen extends AbstractScreen{
 		
 		pingBoard = Gdx.audio.newSound(Gdx.files.internal("ping_wood.wav"));
 		pingWall = Gdx.audio.newSound(Gdx.files.internal("ping_wall.wav"));
-		whistleSound = Gdx.audio.newSound(Gdx.files.internal("whistle.wav"));
+		whistleSound = Gdx.audio.newSound(Gdx.files.internal("whistle.mp3"));
 		ball = new Image(new Texture(Gdx.files.internal("pongball.png")));
 		ball.setOrigin(ball.getX() + ball.getWidth() / 2, ball.getY() + ball.getHeight() / 2);
 		topBar = new Image(new Texture(Gdx.files.internal("bar.png")));
@@ -181,10 +182,10 @@ public class GameScreen extends AbstractScreen{
         ball.rotate(-ballXPixel);
         
         float ballTopPanelDiffX = (ball.getX() + ball.getWidth() / 2) - (topBar.getX() + topBar.getWidth() / 2);
-        float thresholdedDiff = ballTopPanelDiffX * 5f;
+        float thresholdedDiff = ballTopPanelDiffX * 3f;
         
 		topBar.setX(topBar.getX() + thresholdedDiff * delta);
-        
+		
 		Score scoreResult = processBallMovement();
 		
         if (scoreResult == Score.MY) {
