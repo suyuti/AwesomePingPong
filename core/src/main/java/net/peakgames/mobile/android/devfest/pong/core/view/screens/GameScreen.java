@@ -22,18 +22,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+
 public class GameScreen extends AbstractScreen{
 	
 	public enum Score {
 		NONE, MY, OPPONENT
 	}
 	
-	// IMAGES
-	private Image ball;
-	private Image topBar;
-	private Image bottomBar;
-	private Image scoreBoard;
+	// PARTICLE
+	private ParticleActor particle;
+	private ParticleActor ballParticle;
+	private ParticleActor engineParticle1;
+	private ParticleActor engineParticle2;
 	
+	// CONSTANTS
+	private static final float AI_COEFFICIENT = 3f;
+	
+	// VARIABLES
+	private int myScore = 0;
+	private int aIScore = 0;
+
+	// IMAGES
+	private Image scoreBoard;
+
 	// LABELS
 	private Label myScoreLabel;
 	private Label aIScoreLabel;
@@ -46,21 +57,20 @@ public class GameScreen extends AbstractScreen{
 	private Sound pingBoard;
 	private Sound pingWall;
 	
+	// CONSTANTS
+	private static final float MIN_VELOCITY_X_PER_SECOND = 50;
+	private static final int GAME_AREA_TOP = 700;
+	
+	// IMAGES
+	private Image ball;
+	private Image topBar;
+	private Image bottomBar;
+
 	// VARIABLES
 	private float ballVelocityXPerSecond = 120;
 	private float ballVelocityYPerSecond = 200;
 	private Map<Integer, Float> barVelocityMap = new TreeMap<Integer, Float>();
-	private int myScore = 0;
-	private int aIScore = 0;
-	
-	// CONSTANTS
-	private static final float MIN_VELOCITY_X_PER_SECOND = 50;
-	private static final int GAME_AREA_TOP = 700;
-	private static final float AI_COEFFICIENT = 3f;
-	
-	// PARTICLE
-	private ParticleActor particle;
-	
+
 	public GameScreen(AwesomePingPong game) {
 		super(game);
 	}
@@ -82,11 +92,24 @@ public class GameScreen extends AbstractScreen{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void show() {
+		initializeBarVelocityMap();
+		loadBackgroundImage();
+		loadTheBall();
+		loadBars();
+		resetGame();
+		setListeners();
+		loadScoreBoard();
+		loadLabels();
+		loadSoundEffects();
+		loadParticleEffect();
+	}
 	
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		
 		updateBallPosition(delta);
 		updateTopBarPosition(delta);
 		
@@ -105,23 +128,10 @@ public class GameScreen extends AbstractScreen{
 			resetGame();
 		}
 		
+		ballParticle.show(new Vector2(ball.getX() + ball.getWidth() / 2, ball.getY() + ball.getHeight() / 2), new Vector2(0,360));
+		engineParticle1.show(new Vector2(bottomBar.getX() + 10, bottomBar.getY()));
+		engineParticle2.show(new Vector2(bottomBar.getX() + bottomBar.getWidth() - 10, bottomBar.getY()));
 	}
-
-	@Override
-	public void show() {
-		
-		initializeBarVelocityMap();
-		loadBackgroundImage();
-		loadTheBall();
-		loadBars();
-		resetGame();
-		setListeners();
-		loadScoreBoard();
-		loadLabels();
-		loadSoundEffects();
-		loadParticleEffect();
-		
-	} 
 	
 	private void initializeBarVelocityMap() {
 		barVelocityMap.put(8, -2.5f);
@@ -227,7 +237,7 @@ public class GameScreen extends AbstractScreen{
 			ball.setX(0);
 		}
 	}
-	
+
 	private Score processBallMovement() {
 		float ballRight = ball.getRight();
 		float ballLeft = ball.getX();
@@ -248,8 +258,8 @@ public class GameScreen extends AbstractScreen{
 			if(ballCenterX >= bottomBarLeft && ballCenterX <= bottomBarRight) {
 				updateBallVelocity(ballCenterX, bottomBarLeft);
 				particle.show(new Vector2(ballCenterX, ballBottom), new Vector2(30,150));
-				ball.setY(bottomBarTop);
 				pingBoard.play();
+				ball.setY(bottomBarTop);
 			}
 		}
 		
@@ -258,16 +268,16 @@ public class GameScreen extends AbstractScreen{
 			if(ballCenterX >= topBarLeft && ballCenterX <= topBarRight) {
 				updateBallVelocity(ballCenterX, topBarLeft);
 				particle.show(new Vector2(ballCenterX, ballTop), new Vector2(210,330));
-				ball.setY(topBarBottom - ball.getHeight());
 				pingBoard.play();
+				ball.setY(topBarBottom - ball.getHeight());
 			}
 		}
 		
 		// WALL HIT CHECK
 		if(ballRight >= game.getScreenWidth() || ballLeft <= 0) {
 			correctBallXCoordinateIfRequired(ballRight);
-			ballVelocityXPerSecond = flipDirection(ballVelocityXPerSecond);
 			pingWall.play();
+			ballVelocityXPerSecond = flipDirection(ballVelocityXPerSecond);
 		}
 		
 		// GOAL HIT CHECK
@@ -345,10 +355,25 @@ public class GameScreen extends AbstractScreen{
 	
 	private void loadParticleEffect() {
 		ParticleEffect particleEffect = new ParticleEffect();
-		particleEffect.load(Gdx.files.internal("particle.p"), Gdx.files.internal(""));
-		particle = new ParticleActor(particleEffect);
+		particleEffect.load(Gdx.files.internal("particle2.p"), Gdx.files.internal(""));
+		particle = new ParticleActor(particleEffect, 0.6f);
 		this.stage.addActor(particle);
+		
+		ParticleEffect ballParticleEffect = new ParticleEffect();
+		ballParticleEffect.load(Gdx.files.internal("ballParticle.p"), Gdx.files.internal(""));
+		ballParticle = new ParticleActor(ballParticleEffect, Float.MAX_VALUE);
+		this.stage.addActor(ballParticle);
+		
+		ParticleEffect engineEffect1 = new ParticleEffect();
+		engineEffect1.load(Gdx.files.internal("engineParticle.p"), Gdx.files.internal(""));
+		engineParticle1 = new ParticleActor(engineEffect1, Float.MAX_VALUE);
+		this.stage.addActor(engineParticle1);
+		
+		ParticleEffect engineEffect2 = new ParticleEffect();
+		engineEffect2.load(Gdx.files.internal("engineParticle.p"), Gdx.files.internal(""));
+		engineParticle2 = new ParticleActor(engineEffect2, Float.MAX_VALUE);
+		this.stage.addActor(engineParticle2);
+		
 	}
-	
 	
 }

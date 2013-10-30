@@ -6,7 +6,7 @@ lowMin: 1000.0
 lowMax: 1000.0
 - Count - 
 min: 0
-max: 8
+max: 30
 - Emission - 
 lowMin: 0.0
 lowMax: 0.0
@@ -58,10 +58,10 @@ scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - Scale - 
-lowMin: 0.0
-lowMax: 0.0
-highMin: 10.0
-highMax: 10.0
+lowMin: 20.0
+lowMax: 20.0
+highMin: 40.0
+highMax: 40.0
 relative: false
 scalingCount: 2
 scaling0: 0.0
@@ -102,12 +102,16 @@ active: false
 - Gravity - 
 active: false
 - Tint - 
-colorsCount: 3
+colorsCount: 6
 colors0: 1.0
-colors1: 0.39607844
-colors2: 0.047058824
-timelineCount: 1
+colors1: 0.99607843
+colors2: 0.2
+colors3: 1.0
+colors4: 0.2
+colors5: 0.2
+timelineCount: 2
 timeline0: 0.0
+timeline1: 1.0
 - Transparency - 
 lowMin: 0.0
 lowMax: 0.0
@@ -118,11 +122,11 @@ scalingCount: 4
 scaling0: 0.0
 scaling1: 1.0
 scaling2: 1.0
-scaling3: 0.0
+scaling3: 1.0
 timelineCount: 4
 timeline0: 0.0
-timeline1: 0.2
-timeline2: 0.80136985
+timeline1: 0.2739726
+timeline2: 0.6917808
 timeline3: 1.0
 - Options - 
 attached: false
@@ -131,4 +135,4 @@ aligned: false
 additive: true
 behind: false
 - Image Path -
-particle.png
+C:\Users\Fuat Coskun\Desktop\pongball.png

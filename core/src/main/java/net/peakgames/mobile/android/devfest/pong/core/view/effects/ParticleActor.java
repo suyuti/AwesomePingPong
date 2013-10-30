@@ -12,8 +12,9 @@ public class ParticleActor extends Actor {
 	private float animatedTime = 0;
 	private float duration = 0.6f;
 
-	public ParticleActor(ParticleEffect effect) {
+	public ParticleActor(ParticleEffect effect, float duration) {
 		this.effect = effect;
+		this.duration = duration;
 	}
 
 	@Override
@@ -27,6 +28,12 @@ public class ParticleActor extends Actor {
 		ParticleEmitter emitter = effect.getEmitters().get(0);
 		emitter.getAngle().setHighMin(angle.x);
 		emitter.getAngle().setHighMax(angle.y);
+		setPosition(position.x, position.y);
+		effect.start(); // need to start the particle spawning
+		draw = true;
+	}
+	
+	public void show(Vector2 position) {
 		setPosition(position.x, position.y);
 		effect.start(); // need to start the particle spawning
 		draw = true;

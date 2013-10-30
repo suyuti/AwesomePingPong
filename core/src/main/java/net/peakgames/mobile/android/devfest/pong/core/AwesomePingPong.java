@@ -6,7 +6,6 @@ import net.peakgames.mobile.android.devfest.pong.core.view.screens.SplashScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 
 public class AwesomePingPong extends Game {
 
