@@ -62,9 +62,7 @@ public class MenuScreen extends AbstractScreen {
 
 	private void addGameTitle() {
 		Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = new BitmapFont(Gdx.files.internal("steelfish.fnt"),false);
-//        labelStyle.font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        labelStyle.font.scale(1.5f);
+        labelStyle.font = new BitmapFont(Gdx.files.internal("steelfishHeader.fnt"),false);
         Label title = new Label("Awesome Ping Pong!", labelStyle);
         title.setWidth(game.getScreenWidth());
         title.setAlignment(Align.center);

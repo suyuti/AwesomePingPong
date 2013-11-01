@@ -291,13 +291,13 @@ public class GameScreen extends AbstractScreen{
         meText.setPosition(390, 747);
         aIText.setPosition(390, 707);
         
-        Label.LabelStyle goalLabelStyle = new Label.LabelStyle(new BitmapFont(Gdx.files.internal("steelfish.fnt")), Color.BLACK);
+        Label.LabelStyle goalLabelStyle = new Label.LabelStyle(new BitmapFont(Gdx.files.internal("steelfishAnim.fnt")), Color.BLACK);
 		goalLabel = new Label("GOAL!!!", goalLabelStyle);
 		goalLabel.setWidth(300);
 		goalLabel.setAlignment(Align.center);
-		goalLabel.setPosition(30, 730);
+		goalLabel.setPosition(30, 670);
 		goalLabel.addAction(Actions.alpha(0));
-		goalLabel.getStyle().font.setScale(2.5f);
+//		goalLabel.getStyle().font.setScale(2.5f);
 		goalLabel.setOriginX(goalLabel.getWidth()/2);
 		
 		this.stage.addActor(myScoreLabel);
