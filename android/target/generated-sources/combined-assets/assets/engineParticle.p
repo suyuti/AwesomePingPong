@@ -131,4 +131,4 @@ aligned: false
 additive: true
 behind: false
 - Image Path -
-C:\Users\Fuat Coskun\Desktop\pongball.png
+pongball.png

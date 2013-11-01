@@ -133,4 +133,4 @@ aligned: false
 additive: true
 behind: false
 - Image Path -
-C:\Peak\AwesomePingPong\desktop\assets\pongball.png
+pongball.png
